@@ -19,23 +19,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         initializeViews()
         RestClient.getApiInterface().weatherData.enqueue(object : ResponseResolver<WeatherData>(this@MainActivity, true, false) {
             override fun success(weatherData: WeatherData) {
                 Log.e("Success", "Success")
+
                 var dateMap = LinkedHashMap<String, ArrayList<WeatherModel>>()
                 for (weather in weatherData.list) {
                     var date = weather.dtTxt.split(" ")[0]
                     if (dateMap[date] == null) {
                         dateMap[date] = ArrayList<WeatherModel>()
                     }
-                }
-
-                for (weather in weatherData.list) {
                     val weatherList = dateMap[weather.dtTxt.split(" ")[0]]
                     val splitDate: List<String>? = weather.dtTxt.split(" ")
                     weatherList?.add(WeatherModel(weather.main.tempMin, weather.main.tempMin, weather.weather.get(0).id, splitDate!![0], splitDate!![1]
-                    , weather.weather.get(0).icon))
+                            , weather.weather.get(0).icon))
                     dateMap[weather.dtTxt.split(" ")[0]] = weatherList!!
                 }
 
